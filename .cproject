@@ -294,7 +294,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.304412286" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.445454555" name="Floating point" superClass="com.crt.advproject.link.fpu"/>
 								<option id="com.crt.advproject.link.manage.740481363" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.711242131" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;DigitalCompass_Debug.ld&quot;" valueType="string"/>
+								<option id="com.crt.advproject.link.script.711242131" name="Linker script" superClass="com.crt.advproject.link.script" value="DigitalCompass_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.957424249" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.1825914602" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.92758244" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -511,7 +511,7 @@
 								<option id="com.crt.advproject.gcc.specs.57112966" name="Specs" superClass="com.crt.advproject.gcc.specs" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.config.395778067" name="Obsolete (Config)" superClass="com.crt.advproject.gcc.config" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.store.230271541" name="Obsolete (Store)" superClass="com.crt.advproject.gcc.store" useByScannerDiscovery="false"/>
-								<option id="com.crt.advproject.gcc.exe.release.option.optimization.level.1952984083" superClass="com.crt.advproject.gcc.exe.release.option.optimization.level"/>
+								<option id="com.crt.advproject.gcc.exe.release.option.optimization.level.1952984083" superClass="com.crt.advproject.gcc.exe.release.option.optimization.level" useByScannerDiscovery="true"/>
 								<inputType id="com.crt.advproject.compiler.input.1931458704" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.release.203697757" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.release">
@@ -630,7 +630,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.50826890" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.821918794" name="Floating point" superClass="com.crt.advproject.link.fpu"/>
 								<option id="com.crt.advproject.link.manage.98249162" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1530480888" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;DigitalCompass_Release.ld&quot;" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1530480888" name="Linker script" superClass="com.crt.advproject.link.script" value="DigitalCompass_Release.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1373744688" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.1914929400" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.2082205906" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -730,4 +730,6 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="openCmsis"/>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

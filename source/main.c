@@ -30,9 +30,12 @@
 
 #include "fsl_device_registers.h"
 #include "fsl_debug_console.h"
+#include "fsl_clock.h"
 #include "board.h"
 
 #include "pin_mux.h"
+#include "i2c.h"
+#include "systick.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -57,8 +60,11 @@ int main(void)
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
 
-    PRINTF("hello world.\r\n");
+    init_systick();
 
+    PRINTF("hello world.\r\n");
+    PRINTF("Core Clock Frequency %d\r\n",CLOCK_GetCoreSysClkFreq());
+    init_i2c();
     while (1)
     {
         ch = GETCHAR();
