@@ -75,6 +75,20 @@ void reset_tick()
 }
 
 /*
+ * A function for blocking delay call in seconds
+ *
+ * Parameters:
+ *  seconds interger value of number of seconds to delay
+ *
+ * Returns:
+ *  none
+ */
+void b_delay(int seconds){
+	reset_tick();
+	while(now()<(seconds<<SYSTICK_CONVERSION_FACTOR));
+}
+
+/*
  * Systick Interrupt Handler is used to increment the value of the ticks variable .
  *
  * Parameters:

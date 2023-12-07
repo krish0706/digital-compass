@@ -58,4 +58,15 @@ ticktime_t now();
  *  none
  */
 void reset_tick();
+
+/*
+ * A function for blocking delay call in seconds
+ *
+ * Parameters:
+ *  seconds interger value of number of seconds to delay
+ *
+ * Returns:
+ *  none
+ */
+void b_delay(int seconds);
 #endif
