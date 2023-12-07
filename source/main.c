@@ -36,6 +36,7 @@
 #include "pin_mux.h"
 #include "i2c.h"
 #include "systick.h"
+#include "QMC5883L.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -65,6 +66,7 @@ int main(void)
     PRINTF("hello world.\r\n");
     PRINTF("Core Clock Frequency %d\r\n",CLOCK_GetCoreSysClkFreq());
     init_i2c();
+    init_qmc();
     while (1)
     {
         ch = GETCHAR();
