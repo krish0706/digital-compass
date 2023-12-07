@@ -64,7 +64,25 @@ qmc_error_t qmc_i2c_read_reg(uint8_t reg,uint8_t* data){
 	return QMC_OK;
 }
 
+void setOSR(qmc_cr1_osr_options_t option, uint8_t* CR1){
+	*CR1 &= ~CR1_OSR_MASK;
+	*CR1 |= option<<CR1_OSR_SHIFT;
+}
 
+void setRNG(qmc_cr1_osr_options_t option, uint8_t* CR1){
+	*CR1 &= ~CR1_RNG_MASK;
+	*CR1 |= option<<CR1_RNG_SHIFT;
+}
+
+void setODR(qmc_cr1_osr_options_t option, uint8_t* CR1){
+	*CR1 &= ~CR1_ODR_MASK;
+	*CR1 |= option<<CR1_ODR_SHIFT;
+}
+
+void setMODE(qmc_cr1_osr_options_t option, uint8_t* CR1){
+	*CR1 &= ~CR1_MODE_MASK;
+	*CR1 |= option<<CR1_MODE_SHIFT;
+}
 
 void init_qmc(){
 	uint8_t data;

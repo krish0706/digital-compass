@@ -28,7 +28,7 @@
 #define CR1_RNG_MASK   		(0x30U)
 #define CR1_RNG_SHIFT  		(4U)
 #define CR1_ODR_MASK   		(0x0CU)
-#define CR1_ORD_SHIFT  		(2U)
+#define CR1_ODR_SHIFT  		(2U)
 #define CR1_MODE_MASK  		(0x03U)
 #define CR1_MODE_SHIFT 		(0U)
 
@@ -44,6 +44,29 @@ typedef enum{
 	QMC_OK = 1
 }qmc_error_t;
 
+typedef enum{
+	STANDBY,
+	CONTINUOUS
+}qmc_cr1_mode_options_t;
+
+typedef enum{
+	ODR_OPTION_10HZ,
+	ODR_OPTION_50HZ,
+	ODR_OPTION_100HZ,
+	ODR_OPTION_200HZ
+}qmc_cr1_odr_options_t;
+
+typedef enum{
+	RNG_OPTION_2G,
+	RNG_OPTION_8G
+}qmc_cr1_rng_options_t;
+
+typedef enum{
+	OSR_OPTION_512,
+	OSR_OPTION_256,
+	OSR_OPTION_128,
+	OSR_OPTION_64,
+}qmc_cr1_osr_options_t;
 void init_qmc();
 
 #endif
