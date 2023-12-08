@@ -3,6 +3,11 @@
 #include "fsl_debug_console.h"//for debugging
 #include "systick.h"
 
+qmc_calibration_data_t calibration_data = {
+		.offset_x = OFFSET_X,
+		.offset_y = OFFSET_Y,
+		.offset_z = OFFSET_Z,
+};
 
 qmc_error_t qmc_i2c_write_reg(uint8_t reg,uint8_t data){
 	I2C_TRANSMIT_MODE();
@@ -197,6 +202,13 @@ void process_raw_data(uint8_t data[],int16_t result[]){
 	}
 }
 
+//raw data goes in, calibrated data comes out
+void qmc_calibrate_data(int16_t data[]){
+	data[0] = data[0] - calibration_data.offset_x;
+	data[1] = data[1] - calibration_data.offset_y;
+	data[2] = data[2] - calibration_data.offset_z;
+}
+
 void init_qmc(qmc_config_t *config){
 	uint8_t cr1 = 0, cr2 = 0;
 
@@ -211,51 +223,96 @@ void init_qmc(qmc_config_t *config){
 
 	//write default value into srs period register
 	while(qmc_i2c_write_reg(QMC_SRS_PERIOD_ADDR,QMC_SRS_PERIOD_DEFAULT_VALUE)!= QMC_OK);
-	b_delay(1);
+	b_delay(500);
 
 	//write cr1 register
 	while(qmc_i2c_write_reg(QMC_CR1_ADDR,cr1)!= QMC_OK);
-	b_delay(1);
+	b_delay(500);
 
 	//write cr2 register
 	while(qmc_i2c_write_reg(QMC_CR2_ADDR,cr2)!= QMC_OK);
-	b_delay(1);
+	b_delay(500);
 
 	PRINTF("CONFIG WRITTEN\r\n");
 	PRINTF("CR1: %x\r\n",cr1);
 	PRINTF("CR2: %x\r\n",cr2);
 }
 #define NUM_DOUT_BUFFER 6
-void qmc_get_nex_raw_sample(int16_t result[]){
+qmc_error_t qmc_get_nex_raw_sample(int16_t result[]){
 	qmc_error_t ret;
 	uint8_t sr = 0;
 	uint8_t dout_buffer[NUM_DOUT_BUFFER];
 	while(1){
 		ret = qmc_i2c_read_reg(QMC_SR_ADDR,&sr);
 		if(ret == QMC_OK){
-			PRINTF("SR %x\r\n",sr);
 			if(getDOR(sr)){
-				PRINTF("DATA OVERRUN\r\n");
+				ret = QMC_ERROR_DOR;
 			}
 			if(getOVL(sr)){
-				PRINTF("DATA OVERFLOW\r\n");
+				ret = QMC_ERROR_OVL;
 			}
 			if(getDRDY(sr)){
-				b_delay(1);
+				b_delay(500);
 				while(qmc_i2c_read_regs(QMC_DATA_X_LSB_ADDR,dout_buffer,NUM_DOUT_BUFFER) != QMC_OK);
-				PRINTF("DATA READY\r\n");
 				process_raw_data(dout_buffer, result);
-				PRINTF("DATA PROCESSED\r\n");
 				break;
 			}
 		}
+		b_delay(10);
+	}
+	return ret;
+}
+
+//TODO: use calib struct with this
+//TODO: add citation in README
+//https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
+//void qmc_run_calibration(uint16_t num_samples, float bias[]){
+//	uint16_t i = 0;
+//	int16_t max_value[3] = {-32767,-32767,-32767};
+//	int16_t min_value[3] = {32767,32767,32767};
+//	int16_t raw_sample_value[3] = {0};
+//	while(i < num_samples){
+//		qmc_get_nex_raw_sample(raw_sample_value);
+//		for(int i = 0; i < 3; i++){
+//			if(raw_sample_value[i] < min_value[i]){
+//				min_value[i] = raw_sample_value[i];
+//			}
+//			if(raw_sample_value[i] > max_value[i]){
+//				max_value[i] = raw_sample_value[i];
+//			}
+//		}
+//		b_delay(1);
+//		i++;
+//	}
+//	for(int i = 0; i < 3; i++){
+//		bias[i] = (float)((max_value[i] + min_value[i])/2);
+//	}
+//}
+
+void qmc_dump_calibration_data(uint16_t num_samples_to_dump){
+	int16_t raw_result[3];
+	uint16_t i = 0;
+
+	while(i < num_samples_to_dump){
+
+		qmc_get_nex_raw_sample(raw_result);
+
+		for(int i = 0; i < 3;i++){
+			if(raw_result[i] < 0){
+				PRINTF("-%i ",raw_result[i]);
+			}else{
+				PRINTF("%i ",raw_result[i]);
+			}
+		}
+		PRINTF("\r\n");
+		i++;
 	}
 }
 
 //void init_qmc(){
 ////	uint8_t data;
 ////	while(qmc_i2c_write_reg(QMC_CR1_ADDR,0b00010101) != QMC_OK);
-////	b_delay(1);
+////	b_delay(500);
 ////	while(qmc_i2c_read_reg(QMC_CR1_ADDR, &data) != QMC_OK);
 ////	PRINTF("DATA: 0x%x\r\n",data);
 ////#define reg_buf_len 4
@@ -265,9 +322,9 @@ void qmc_get_nex_raw_sample(int16_t result[]){
 ////		PRINTF("%d %d\r\n",reg_buf[reg_buf_len]);
 ////	}
 //	while(qmc_i2c_write_reg(QMC_SRS_PERIOD_ADDR,QMC_SRS_PERIOD_DEFAULT_VALUE)!= QMC_OK);
-//	b_delay(1);
+//	b_delay(500);
 //	while(qmc_i2c_write_reg(QMC_CR1_ADDR,0x1D) != QMC_OK);
-//	b_delay(1);
+//	b_delay(500);
 //	uint8_t sr = 0;
 //	qmc_error_t ret;
 //#define reg_buf_len 6
@@ -277,7 +334,7 @@ void qmc_get_nex_raw_sample(int16_t result[]){
 //		ret = qmc_i2c_read_reg(QMC_SR_ADDR,&sr);
 //		if(ret == QMC_OK){
 //			if(getDRDY(sr)){
-//				b_delay(1);
+//				b_delay(500);
 //				while(qmc_i2c_read_regs(QMC_DATA_X_LSB_ADDR,reg_buf,reg_buf_len) != QMC_OK);
 //				for(int i = 0; i < reg_buf_len; i++){
 //					PRINTF("%d %d\r\n",i,reg_buf[i]);
@@ -290,7 +347,7 @@ void qmc_get_nex_raw_sample(int16_t result[]){
 //				PRINTF("DATA PROCESSED\r\n");
 //			}
 //		}
-//		b_delay(1);
+//		b_delay(500);
 //	}
 //}
 

@@ -43,7 +43,9 @@
 
 typedef enum{
 	QMC_NACK_ERROR = 0,
-	QMC_OK = 1
+	QMC_OK = 1,
+	QMC_ERROR_DOR = 0,
+	QMC_ERROR_OVL = 0,
 }qmc_error_t;
 
 typedef enum{
@@ -95,7 +97,22 @@ typedef struct{
 	qmc_cr2_int_enb_options_t int_enb;
 }qmc_config_t;
 
+
+#define OFFSET_X 54
+#define OFFSET_Y -193
+#define OFFSET_Z -31
+
+typedef struct{
+	int16_t offset_x;
+	int16_t offset_y;
+	int16_t offset_z;
+}qmc_calibration_data_t;
+
 void init_qmc(qmc_config_t *config);
-void qmc_get_nex_raw_sample(int16_t result[]);
+qmc_error_t qmc_get_nex_raw_sample(int16_t result[]);
+void qmc_dump_calibration_data(uint16_t num_samples_to_dump);
+void qmc_run_calibration(uint16_t num_samples, float bias[]);
+void qmc_calibrate_data(int16_t data[]);
+
 
 #endif

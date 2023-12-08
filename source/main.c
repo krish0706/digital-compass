@@ -37,6 +37,8 @@
 #include "i2c.h"
 #include "systick.h"
 #include "QMC5883L.h"
+#include "math.h"
+#define PI 3.14159
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -76,16 +78,41 @@ int main(void)
     config.odr = ODR_OPTION_200HZ;
     config.mode = MODE_OPTION_CONTINUOUS;
     init_qmc(&config);
-    int16_t raw_result[3];
-    while (1)
-    {
-    	qmc_get_nex_raw_sample(raw_result);
-		for(int i = 0; i < 3;i++){
-			if(raw_result[i] < 0){
-				PRINTF("Axis:%d Data:-%i\r\n",i,raw_result[i]);
-			}else{
-				PRINTF("Axis:%d Data:%i\r\n",i,raw_result[i]);
-			}
-		}
+//    float bias[3];
+//    int16_t raw_result[3];
+//    qmc_dump_calibration_data(300);
+//    qmc_run_calibration(100, bias);
+//    PRINTF("CALIBRATION DONE\r\n");
+//    while (1)
+//    {
+////    	qmc_get_nex_raw_sample(raw_result);
+////		for(int i = 0; i < 3;i++){
+////			if(raw_result[i] < 0){
+////				PRINTF("Axis:%d Data:-%i\r\n",i,raw_result[i]);
+////			}else{
+////				PRINTF("Axis:%d Data:%i\r\n",i,raw_result[i]);
+////			}
+////		}
+//    }
+    int16_t result[3] = {0};
+    while(1){
+    	qmc_get_nex_raw_sample(result);
+    	qmc_calibrate_data(result);
+//		for(int i = 0; i < 3;i++){
+//			if(result[i] < 0){
+//				PRINTF("Axis:%d Data:-%i\r\n",i,result[i]);
+//			}else{
+//				PRINTF("Axis:%d Data:%i\r\n",i,result[i]);
+//			}
+//		}
+    	double angle = 0;
+    	angle = atan2(result[1],result[0]);
+    	if(angle < 0){
+    		angle = (angle)*180/PI + 360;
+    		PRINTF("%d Degrees\r\n",(int)angle);
+    	}else{
+    		angle = (angle)*180/PI;
+    		PRINTF("%d Degrees\r\n",(int)angle);
+    	}
     }
 }
