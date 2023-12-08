@@ -27,6 +27,7 @@
 #define MUX_GPIO 1
 
 ticktime_t tick = 0;
+ticktime_t clock_tick = 0;
 /*
  * Initializes the Systick timer. It is configured to generate an interrupt every 1ms which is used to
  * increment the tick variable. If CLKSOURCE bit is 0, core-clock/16 is the systick clock
@@ -74,6 +75,14 @@ void reset_tick()
 	tick = 0;
 }
 
+void reset_clock_tick(){
+	clock_tick = tick;
+}
+
+ticktime_t get_clock_tick(){
+	return (tick-clock_tick);
+}
+
 /*
  * A function for blocking delay call in seconds
  *
@@ -84,8 +93,8 @@ void reset_tick()
  *  none
  */
 void b_delay(int ms){
-	reset_tick();
-	while(now()<(ms));
+	reset_clock_tick();
+	while(get_clock_tick()<(ms));
 }
 
 /*
