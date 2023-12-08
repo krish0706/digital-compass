@@ -54,8 +54,6 @@
  */
 int main(void)
 {
-    char ch;
-
     /* Init board hardware. */
     BOARD_InitPins();
     BOARD_BootClockRUN();
@@ -66,10 +64,28 @@ int main(void)
     PRINTF("hello world.\r\n");
     PRINTF("Core Clock Frequency %d\r\n",CLOCK_GetCoreSysClkFreq());
     init_i2c();
-    init_qmc();
+
+
+
+    qmc_config_t config;
+    config.int_enb = INT_ENB_DISABLE;
+    config.rol_pnt = ROL_PNT_DISABLE;
+    config.soft_rst = SOFT_RST_DISABLE;
+    config.osr = OSR_OPTION_512;
+    config.rng = RNG_OPTION_8G;
+    config.odr = ODR_OPTION_200HZ;
+    config.mode = MODE_OPTION_CONTINUOUS;
+    init_qmc(&config);
+    int16_t raw_result[3];
     while (1)
     {
-        ch = GETCHAR();
-        PUTCHAR(ch);
+    	qmc_get_nex_raw_sample(raw_result);
+		for(int i = 0; i < 3;i++){
+			if(raw_result[i] < 0){
+				PRINTF("Axis:%d Data:-%i\r\n",i,raw_result[i]);
+			}else{
+				PRINTF("Axis:%d Data:%i\r\n",i,raw_result[i]);
+			}
+		}
     }
 }

@@ -47,8 +47,8 @@ typedef enum{
 }qmc_error_t;
 
 typedef enum{
-	STANDBY,
-	CONTINUOUS
+	MODE_OPTION_STANDBY,
+	MODE_OPTION_CONTINUOUS
 }qmc_cr1_mode_options_t;
 
 typedef enum{
@@ -69,6 +69,33 @@ typedef enum{
 	OSR_OPTION_128,
 	OSR_OPTION_64,
 }qmc_cr1_osr_options_t;
-void init_qmc();
+
+typedef enum{
+	SOFT_RST_DISABLE,
+	SOFT_RST_ENABLE
+}qmc_cr2_soft_rst_options_t;
+
+typedef enum{
+	ROL_PNT_DISABLE,
+	ROL_PNT_ENABLE
+}qmc_cr2_rol_pnt_options_t;
+
+typedef enum{
+	INT_ENB_ENABLE,
+	INT_ENB_DISABLE
+}qmc_cr2_int_enb_options_t;
+
+typedef struct{
+	qmc_cr1_mode_options_t mode;
+	qmc_cr1_odr_options_t odr;
+	qmc_cr1_rng_options_t rng;
+	qmc_cr1_osr_options_t osr;
+	qmc_cr2_soft_rst_options_t soft_rst;
+	qmc_cr2_rol_pnt_options_t rol_pnt;
+	qmc_cr2_int_enb_options_t int_enb;
+}qmc_config_t;
+
+void init_qmc(qmc_config_t *config);
+void qmc_get_nex_raw_sample(int16_t result[]);
 
 #endif
