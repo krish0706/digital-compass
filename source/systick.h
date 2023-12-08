@@ -11,7 +11,7 @@
 /**
  * @file    systick.h
  * @brief   Header file for Systick Driver.Here, the systick is configured
- * 			to generate a tick every 500ms
+ * 			to generate a tick every 1ms
  *
  *
  * @author  Krish Shah
@@ -21,12 +21,11 @@
 #ifndef __SYSTICK_H__
 #define __SYSTICK_H__
 #include "board.h"
-#define SYSTICK_CONVERSION_FACTOR 1//1 tick is 500ms, so tick by 2 to get time in 1s
 
 typedef volatile uint32_t ticktime_t;
 
 /*
- * Initializes the Systick timer. It is configured to generate an interrupt every 500ms which is used to
+ * Initializes the Systick timer. It is configured to generate an interrupt every 1ms which is used to
  * increment the tick variable.
  *
  * Parameters:
@@ -60,7 +59,7 @@ ticktime_t now();
 void reset_tick();
 
 /*
- * A function for blocking delay call in seconds
+ * A function for blocking delay call in mseconds
  *
  * Parameters:
  *  seconds interger value of number of seconds to delay
@@ -68,5 +67,5 @@ void reset_tick();
  * Returns:
  *  none
  */
-void b_delay(int seconds);
+void b_delay(int ms);
 #endif

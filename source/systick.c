@@ -23,13 +23,13 @@
 #include "core_cm0plus.h"
 
 
-#define SYSTICK_LOAD_VALUE 3000000L>>SYSTICK_CONVERSION_FACTOR
+#define SYSTICK_LOAD_VALUE 3000
 #define MUX_GPIO 1
 
 ticktime_t tick = 0;
 /*
- * Initializes the Systick timer. It is configured to generate an interrupt every 500ms which is used to
- * increment the tick variable.
+ * Initializes the Systick timer. It is configured to generate an interrupt every 1ms which is used to
+ * increment the tick variable. If CLKSOURCE bit is 0, core-clock/16 is the systick clock
  *
  * Parameters:
  *  none
@@ -78,14 +78,14 @@ void reset_tick()
  * A function for blocking delay call in seconds
  *
  * Parameters:
- *  seconds interger value of number of seconds to delay
+ *  seconds interger value of number of ms to delay
  *
  * Returns:
  *  none
  */
-void b_delay(int seconds){
+void b_delay(int ms){
 	reset_tick();
-	while(now()<(seconds<<SYSTICK_CONVERSION_FACTOR));
+	while(now()<(ms));
 }
 
 /*
