@@ -39,6 +39,8 @@
 #define CR2_INT_ENB_MASK	(0x01U)
 #define CR2_INT_ENB_SHIFT	(0U)
 
+#define QMC_SRS_PERIOD_DEFAULT_VALUE (0x01U)
+
 typedef enum{
 	QMC_NACK_ERROR = 0,
 	QMC_OK = 1
