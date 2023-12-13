@@ -20,7 +20,7 @@ ssd1306_error_t ssd1306_send_one_cmd(uint8_t cmd){
 		return SSD1306_NACK_ERROR;
 	}
 
-	I2C_SEND_BYTE(SSD1306_CMD_BYTE_SEND_ONE_COMMAND);
+	I2C_SEND_BYTE(SSD1306_CMD_BYTE_SEND_MULTIPLE_COMMANDS);
 	I2C_WAIT_IICIF();
 	if(I2C_RXAK() == I2C_NACK){
 		return SSD1306_NACK_ERROR;
@@ -35,34 +35,6 @@ ssd1306_error_t ssd1306_send_one_cmd(uint8_t cmd){
 	b_delay(10);//i2c lockup
 	return SSD1306_OK;
 }
-
-//ssd1306_error_t ssd1306_send_multi_byte_command(uint8_t cmd,uint8_t parameters[],uint8_t parameter_len){
-//	I2C_TRANSMIT_MODE();
-//	I2C_START();
-//	I2C_SEND_BYTE(I2C_GET_ADDRESS(SSD1306_DEVICE_ADDR, I2C_WRITE));
-//	I2C_WAIT_IICIF();
-//	if(I2C_RXAK() == I2C_NACK){
-//		return SSD1306_NACK_ERROR;
-//	}
-//
-//	I2C_SEND_BYTE(0x00);
-//	I2C_WAIT_IICIF();
-//	if(I2C_RXAK() == I2C_NACK){
-//		return SSD1306_NACK_ERROR;
-//	}
-//
-//	for(int i = 0; i < parameter_len; i++){
-//		I2C_SEND_BYTE(parameters[i]);
-//		I2C_WAIT_IICIF();
-//		if(I2C_RXAK() == I2C_NACK){
-//			return SSD1306_NACK_ERROR;
-//		}
-//	}
-//
-//	I2C_STOP();
-//	b_delay(10);//i2c lockup
-//	return SSD1306_OK;
-//}
 
 void init_ssd1306(){
 	ssd1306_send_one_cmd(SSD1306_SET_MULTIPLEX);
@@ -114,7 +86,7 @@ ssd1306_error_t ssd1306_update_display(){
 		return SSD1306_NACK_ERROR;
 	}
 
-	I2C_SEND_BYTE(0x40);
+	I2C_SEND_BYTE(SSD1306_CMD_BYTE_SEND_MULTIPLE_DATA);
 	I2C_WAIT_IICIF();
 	if(I2C_RXAK() == I2C_NACK){
 		return SSD1306_NACK_ERROR;
