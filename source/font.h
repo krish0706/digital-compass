@@ -5,6 +5,7 @@
 #define FONT_LOOKUP_OFFSET 0x20
 #define FONT_SIZE 5
 #define FONT_SPACING 6//start of next character from start of previous character, => fontsize+1
+#define FONT_TABLE_LEN 99
 const uint8_t FONT[99][5] = {
 							   {0x00, 0x00, 0x00, 0x00, 0x00},  // space
 							   {0x00, 0x00, 0x4F, 0x00, 0x00},  // !

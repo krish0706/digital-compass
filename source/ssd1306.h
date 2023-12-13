@@ -56,12 +56,11 @@ typedef enum{
 }ssd1306_error_t;
 
 void init_ssd1306();
-ssd1306_error_t ssd1306_update_screen();
 void ssd1306_clear_buffer();
 ssd1306_error_t ssd1306_send_one_cmd(uint8_t cmd);
 void ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len);
 void test_ssd();
-ssd1306_error_t ssd1306_update_screen();
+ssd1306_error_t ssd1306_update_display();
 void ssd1306_set_negative_display();
 void ssd1306_set_positive_display();
 void ssd1306_flip_display_upward();

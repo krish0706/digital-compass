@@ -3,7 +3,7 @@
 #include "string.h"
 #include "stdio.h"
 
-void display_raw_reading_screen(int16_t x, int16_t y,int16_t z){
+void display_raw_reading_display(int16_t x, int16_t y,int16_t z){
 	char buf[100];
 
 	ssd1306_clear_buffer();
@@ -20,9 +20,10 @@ void display_raw_reading_screen(int16_t x, int16_t y,int16_t z){
 	sprintf(buf,"Z:%d",z);
 	ssd1306_write_string_in_buffer(3, 0, buf, strlen(buf));
 
-	ssd1306_update_screen();
+	ssd1306_update_display();
 }
-void display_direction_screen(int16_t direction){
+
+void display_direction_display(int16_t direction){
 	char buf[100];
 
 	ssd1306_clear_buffer();
@@ -33,5 +34,5 @@ void display_direction_screen(int16_t direction){
 	sprintf(buf,"%d Degrees",direction);
 	ssd1306_write_string_in_buffer(1, 0, buf, strlen(buf));
 
-	ssd1306_update_screen();
+	ssd1306_update_display();
 }

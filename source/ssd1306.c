@@ -91,10 +91,10 @@ void init_ssd1306(){
 	ssd1306_send_one_cmd(SSD1306_SET_DISPLAY_ON);
 
 	ssd1306_clear_buffer();
-	ssd1306_update_screen();
+	ssd1306_update_display();
 }
 
-ssd1306_error_t ssd1306_update_screen(){
+ssd1306_error_t ssd1306_update_display(){
 	ssd1306_send_one_cmd(SSD1306_SET_MEMORY_ADDR_MODE);
 	ssd1306_send_one_cmd(SSD1306_MEMORY_ADDR_MODE_HORI);
 
@@ -183,15 +183,23 @@ void ssd1306_flip_display_downward(){
 
 void test_ssd(){
 	ssd1306_clear_buffer();
-	char str[] = "HELLO WORLD";
-	char buf[50];
-	sprintf(buf,"DIRECTION:%d",360);
-	ssd1306_write_string_in_buffer(0, 0, str, strlen(str));
-	ssd1306_update_screen();
-	ssd1306_write_string_in_buffer(1, 0, str, strlen(str));
-	ssd1306_update_screen();
-	ssd1306_write_string_in_buffer(2, 0, buf, strlen(buf));
-	ssd1306_update_screen();
+	char buf[FONT_TABLE_LEN] = {0};
+	for(int i = 0; i < FONT_TABLE_LEN; i++){
+		buf[i] = i + FONT_LOOKUP_OFFSET;
+	}
+	ssd1306_write_string_in_buffer(0, 0, buf, FONT_TABLE_LEN);
+	ssd1306_set_negative_display();
+	ssd1306_update_display();
+	b_delay(1000);
+	ssd1306_set_positive_display();
+	b_delay(1000);
+	ssd1306_mirror_display_reverse();
+	b_delay(1000);
+	ssd1306_mirror_display_forward();
+	b_delay(1000);
+	ssd1306_flip_display_downward();
+	b_delay(1000);
+	ssd1306_flip_display_upward();
 }
 
 
