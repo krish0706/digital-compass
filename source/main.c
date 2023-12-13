@@ -37,7 +37,9 @@
 #include "i2c.h"
 #include "systick.h"
 #include "QMC5883L.h"
+#include "ssd1306.h"
 #include "math.h"
+#include "stdint.h"
 #define PI 3.14159
 /*******************************************************************************
  * Definitions
@@ -64,55 +66,75 @@ int main(void)
     init_systick();
 
     PRINTF("hello world.\r\n");
-    PRINTF("Core Clock Frequency %d\r\n",CLOCK_GetCoreSysClkFreq());
     init_i2c();
+    init_ssd1306();
+    test_ssd();
+
+    ssd1306_set_negative_display();
+    ssd1306_set_positive_display();
+    ssd1306_flip_display_downward();
+    ssd1306_flip_display_upward();
+    ssd1306_mirror_display_reverse();
+    ssd1306_mirror_display_forward();
 
 
+    while(1);
 
-    qmc_config_t config;
-    config.int_enb = INT_ENB_DISABLE;
-    config.rol_pnt = ROL_PNT_DISABLE;
-    config.soft_rst = SOFT_RST_DISABLE;
-    config.osr = OSR_OPTION_512;
-    config.rng = RNG_OPTION_8G;
-    config.odr = ODR_OPTION_200HZ;
-    config.mode = MODE_OPTION_CONTINUOUS;
-    init_qmc(&config);
-//    float bias[3];
-//    int16_t raw_result[3];
-//    qmc_dump_calibration_data(300);
-//    qmc_run_calibration(100, bias);
-//    PRINTF("CALIBRATION DONE\r\n");
-//    while (1)
-//    {
-////    	qmc_get_nex_raw_sample(raw_result);
+//    while(1);
+
+//    qmc_config_t config;
+//    config.int_enb = INT_ENB_DISABLE;
+//    config.rol_pnt = ROL_PNT_DISABLE;
+//    config.soft_rst = SOFT_RST_DISABLE;
+//    config.osr = OSR_OPTION_512;
+//    config.rng = RNG_OPTION_8G;
+//    config.odr = ODR_OPTION_200HZ;
+//    config.mode = MODE_OPTION_CONTINUOUS;
+//    init_qmc(&config);
+////    float bias[3];
+////    int16_t raw_result[3];
+////    qmc_dump_calibration_data(300);
+////    qmc_run_calibration(100, bias);
+////    PRINTF("CALIBRATION DONE\r\n");
+////    while (1)
+////    {
+//////    	qmc_get_nex_raw_sample(raw_result);
+//////		for(int i = 0; i < 3;i++){
+//////			if(raw_result[i] < 0){
+//////				PRINTF("Axis:%d Data:-%i\r\n",i,raw_result[i]);
+//////			}else{
+//////				PRINTF("Axis:%d Data:%i\r\n",i,raw_result[i]);
+//////			}
+//////		}
+////    }
+//    int16_t result[3] = {0};
+//        qmc_config_t config;
+//        config.int_enb = INT_ENB_DISABLE;
+//        config.rol_pnt = ROL_PNT_DISABLE;
+//        config.soft_rst = SOFT_RST_DISABLE;
+//        config.osr = OSR_OPTION_512;
+//        config.rng = RNG_OPTION_8G;
+//        config.odr = ODR_OPTION_200HZ;
+//        config.mode = MODE_OPTION_CONTINUOUS;
+//        init_qmc(&config);
+//    while(1){
+//    	qmc_get_nex_raw_sample(result);
+//    	qmc_calibrate_data(result);
 ////		for(int i = 0; i < 3;i++){
-////			if(raw_result[i] < 0){
-////				PRINTF("Axis:%d Data:-%i\r\n",i,raw_result[i]);
+////			if(result[i] < 0){
+////				PRINTF("Axis:%d Data:-%i\r\n",i,result[i]);
 ////			}else{
-////				PRINTF("Axis:%d Data:%i\r\n",i,raw_result[i]);
+////				PRINTF("Axis:%d Data:%i\r\n",i,result[i]);
 ////			}
 ////		}
+//    	double angle = 0;
+//    	angle = atan2(result[1],result[0]);
+//    	if(angle < 0){
+//    		angle = (angle)*180/PI + 360;
+//    		PRINTF("%d Degrees\r\n",(int)angle);
+//    	}else{
+//    		angle = (angle)*180/PI;
+//    		PRINTF("%d Degrees\r\n",(int)angle);
+//    	}
 //    }
-    int16_t result[3] = {0};
-    while(1){
-    	qmc_get_nex_raw_sample(result);
-    	qmc_calibrate_data(result);
-//		for(int i = 0; i < 3;i++){
-//			if(result[i] < 0){
-//				PRINTF("Axis:%d Data:-%i\r\n",i,result[i]);
-//			}else{
-//				PRINTF("Axis:%d Data:%i\r\n",i,result[i]);
-//			}
-//		}
-    	double angle = 0;
-    	angle = atan2(result[1],result[0]);
-    	if(angle < 0){
-    		angle = (angle)*180/PI + 360;
-    		PRINTF("%d Degrees\r\n",(int)angle);
-    	}else{
-    		angle = (angle)*180/PI;
-    		PRINTF("%d Degrees\r\n",(int)angle);
-    	}
-    }
 }
