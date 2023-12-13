@@ -11,7 +11,7 @@
 /**
  * @file    systick.c
  * @brief   Systick driver code. Here, the systick is configured
- * 			to generate a tick every 500ms
+ * 			to generate a tick every 1ms
  *
  *
  * @author  Krish Shah
