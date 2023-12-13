@@ -7,6 +7,9 @@ qmc_calibration_data_t calibration_data = {
 		.offset_x = OFFSET_X,
 		.offset_y = OFFSET_Y,
 		.offset_z = OFFSET_Z,
+		.scale_x = SCALE_X,
+		.scale_y = SCALE_Y,
+		.scale_z = SCALE_Z,
 };
 
 qmc_error_t qmc_i2c_write_reg(uint8_t reg,uint8_t data){
@@ -204,9 +207,9 @@ void process_raw_data(uint8_t data[],int16_t result[]){
 
 //raw data goes in, calibrated data comes out
 void qmc_calibrate_data(int16_t data[]){
-	data[0] = data[0] - calibration_data.offset_x;
-	data[1] = data[1] - calibration_data.offset_y;
-	data[2] = data[2] - calibration_data.offset_z;
+	data[0] = (calibration_data.scale_x*(data[0] - calibration_data.offset_x));
+	data[1] = (calibration_data.scale_y*(data[1] - calibration_data.offset_y));
+	data[2] = (calibration_data.scale_z*(data[2] - calibration_data.offset_z));
 }
 
 void init_qmc(qmc_config_t *config){
@@ -232,10 +235,6 @@ void init_qmc(qmc_config_t *config){
 	//write cr2 register
 	while(qmc_i2c_write_reg(QMC_CR2_ADDR,cr2)!= QMC_OK);
 	b_delay(500);
-
-	PRINTF("CONFIG WRITTEN\r\n");
-	PRINTF("CR1: %x\r\n",cr1);
-	PRINTF("CR2: %x\r\n",cr2);
 }
 #define NUM_DOUT_BUFFER 6
 qmc_error_t qmc_get_nex_raw_sample(int16_t result[]){

@@ -102,10 +102,17 @@ typedef struct{
 #define OFFSET_Y -193
 #define OFFSET_Z -31
 
+#define SCALE_X 1.03
+#define SCALE_Y	1.01
+#define SCALE_Z	0.95
+
 typedef struct{
 	int16_t offset_x;
 	int16_t offset_y;
 	int16_t offset_z;
+	float scale_x;
+	float scale_y;
+	float scale_z;
 }qmc_calibration_data_t;
 
 void init_qmc(qmc_config_t *config);
