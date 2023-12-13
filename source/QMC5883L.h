@@ -42,6 +42,12 @@
 #define QMC_SRS_PERIOD_DEFAULT_VALUE (0x01U)
 
 typedef enum{
+	AXIS_X,
+	AXIS_Y,
+	AXIS_Z
+}axis_type_t;
+
+typedef enum{
 	QMC_NACK_ERROR = 0,
 	QMC_OK = 1,
 	QMC_ERROR_DOR = 0,

@@ -3,6 +3,10 @@
 #include "fsl_debug_console.h"//for debugging
 #include "systick.h"
 
+#define BYTE_SHIFT 8
+#define NUM_DOUT_BUFFER 6
+
+
 qmc_calibration_data_t calibration_data = {
 		.offset_x = OFFSET_X,
 		.offset_y = OFFSET_Y,
@@ -188,9 +192,6 @@ uint8_t getINT_ENB(uint8_t reg_value){
 	return (reg_value & CR2_INT_ENB_MASK)>>CR2_INT_ENB_SHIFT;
 }
 
-
-
-#define BYTE_SHIFT 8
 static inline int16_t concatenate_bytes(uint8_t MSB, uint8_t LSB){
 	return (int16_t)((MSB<<BYTE_SHIFT) | LSB);
 }
@@ -198,7 +199,7 @@ static inline int16_t concatenate_bytes(uint8_t MSB, uint8_t LSB){
 //result len must be 3 in calling func
 void process_raw_data(uint8_t data[],int16_t result[]){
 	uint8_t MSB, LSB;
-	for(int i = 0; i < 3; i++){
+	for(int i = AXIS_X; i <= AXIS_Z; i++){
 		MSB = data[2*i+1];
 		LSB = data[2*i];
 		result[i] = concatenate_bytes(MSB, LSB);
@@ -207,9 +208,9 @@ void process_raw_data(uint8_t data[],int16_t result[]){
 
 //raw data goes in, calibrated data comes out
 void qmc_calibrate_data(int16_t data[]){
-	data[0] = (calibration_data.scale_x*(data[0] - calibration_data.offset_x));
-	data[1] = (calibration_data.scale_y*(data[1] - calibration_data.offset_y));
-	data[2] = (calibration_data.scale_z*(data[2] - calibration_data.offset_z));
+	data[0] = (calibration_data.scale_x*(data[AXIS_X] - calibration_data.offset_x));
+	data[1] = (calibration_data.scale_y*(data[AXIS_Y] - calibration_data.offset_y));
+	data[2] = (calibration_data.scale_z*(data[AXIS_Z] - calibration_data.offset_z));
 }
 
 void init_qmc(qmc_config_t *config){
@@ -236,7 +237,7 @@ void init_qmc(qmc_config_t *config){
 	while(qmc_i2c_write_reg(QMC_CR2_ADDR,cr2)!= QMC_OK);
 	b_delay(500);
 }
-#define NUM_DOUT_BUFFER 6
+
 qmc_error_t qmc_get_nex_raw_sample(int16_t result[]){
 	qmc_error_t ret;
 	uint8_t sr = 0;
@@ -262,31 +263,33 @@ qmc_error_t qmc_get_nex_raw_sample(int16_t result[]){
 	return ret;
 }
 
-//TODO: use calib struct with this
 //TODO: add citation in README
 //https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
-//void qmc_run_calibration(uint16_t num_samples, float bias[]){
-//	uint16_t i = 0;
-//	int16_t max_value[3] = {-32767,-32767,-32767};
-//	int16_t min_value[3] = {32767,32767,32767};
-//	int16_t raw_sample_value[3] = {0};
-//	while(i < num_samples){
-//		qmc_get_nex_raw_sample(raw_sample_value);
-//		for(int i = 0; i < 3; i++){
-//			if(raw_sample_value[i] < min_value[i]){
-//				min_value[i] = raw_sample_value[i];
-//			}
-//			if(raw_sample_value[i] > max_value[i]){
-//				max_value[i] = raw_sample_value[i];
-//			}
-//		}
-//		b_delay(1);
-//		i++;
-//	}
-//	for(int i = 0; i < 3; i++){
-//		bias[i] = (float)((max_value[i] + min_value[i])/2);
-//	}
-//}
+void qmc_run_calibration(uint16_t num_samples, float bias[]){
+	uint16_t i = 0;
+	int16_t max_value[3] = {-32767,-32767,-32767};
+	int16_t min_value[3] = {32767,32767,32767};
+	int16_t raw_sample_value[3] = {0};
+	while(i < num_samples){
+		qmc_get_nex_raw_sample(raw_sample_value);
+		for(int i = AXIS_X; i <= AXIS_Z; i++){
+			if(raw_sample_value[i] < min_value[i]){
+				min_value[i] = raw_sample_value[i];
+			}
+			if(raw_sample_value[i] > max_value[i]){
+				max_value[i] = raw_sample_value[i];
+			}
+		}
+		b_delay(1);
+		i++;
+	}
+	for(int i = AXIS_X; i <= AXIS_Z; i++){
+		bias[i] = (((float)(max_value[i] + min_value[i]))/2.0f);
+	}
+	calibration_data.offset_x = bias[AXIS_X];
+	calibration_data.offset_y = bias[AXIS_Y];
+	calibration_data.offset_z = bias[AXIS_Z];
+}
 
 void qmc_dump_calibration_data(uint16_t num_samples_to_dump){
 	int16_t raw_result[3];
@@ -296,7 +299,7 @@ void qmc_dump_calibration_data(uint16_t num_samples_to_dump){
 
 		qmc_get_nex_raw_sample(raw_result);
 
-		for(int i = 0; i < 3;i++){
+		for(int i = AXIS_X; i <= AXIS_Z;i++){
 			if(raw_result[i] < 0){
 				PRINTF("-%i ",raw_result[i]);
 			}else{
@@ -307,47 +310,5 @@ void qmc_dump_calibration_data(uint16_t num_samples_to_dump){
 		i++;
 	}
 }
-
-//void init_qmc(){
-////	uint8_t data;
-////	while(qmc_i2c_write_reg(QMC_CR1_ADDR,0b00010101) != QMC_OK);
-////	b_delay(500);
-////	while(qmc_i2c_read_reg(QMC_CR1_ADDR, &data) != QMC_OK);
-////	PRINTF("DATA: 0x%x\r\n",data);
-////#define reg_buf_len 4
-////	uint8_t reg_buf[reg_buf_len] = {0};
-////	while(qmc_i2c_read_regs(QMC_TOUT_LSB_ADDR,reg_buf,reg_buf_len) != QMC_OK);
-////	for(int i = 0; i < reg_buf_len; i++){
-////		PRINTF("%d %d\r\n",reg_buf[reg_buf_len]);
-////	}
-//	while(qmc_i2c_write_reg(QMC_SRS_PERIOD_ADDR,QMC_SRS_PERIOD_DEFAULT_VALUE)!= QMC_OK);
-//	b_delay(500);
-//	while(qmc_i2c_write_reg(QMC_CR1_ADDR,0x1D) != QMC_OK);
-//	b_delay(500);
-//	uint8_t sr = 0;
-//	qmc_error_t ret;
-//#define reg_buf_len 6
-//	uint8_t reg_buf[reg_buf_len] = {0};
-//	int16_t result_buf[3];
-//	while(1){
-//		ret = qmc_i2c_read_reg(QMC_SR_ADDR,&sr);
-//		if(ret == QMC_OK){
-//			if(getDRDY(sr)){
-//				b_delay(500);
-//				while(qmc_i2c_read_regs(QMC_DATA_X_LSB_ADDR,reg_buf,reg_buf_len) != QMC_OK);
-//				for(int i = 0; i < reg_buf_len; i++){
-//					PRINTF("%d %d\r\n",i,reg_buf[i]);
-//				}
-//				PRINTF("DATA READY\r\n");
-//				process_raw_data(reg_buf, result_buf);
-//				for(int i = 0; i < 3;i++){
-//					PRINTF("Axis:%d Data:%d\r\n",i,result_buf[i]);
-//				}
-//				PRINTF("DATA PROCESSED\r\n");
-//			}
-//		}
-//		b_delay(500);
-//	}
-//}
 
 

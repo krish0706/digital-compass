@@ -36,7 +36,7 @@ ssd1306_error_t ssd1306_send_one_cmd(uint8_t cmd){
 	return SSD1306_OK;
 }
 
-void init_ssd1306(){
+ssd1306_error_t init_ssd1306(){
 	ssd1306_send_one_cmd(SSD1306_SET_MULTIPLEX);
 	ssd1306_send_one_cmd(SSD1306_MULTIPLEX_VALUE);
 
@@ -64,6 +64,7 @@ void init_ssd1306(){
 
 	ssd1306_clear_buffer();
 	ssd1306_update_display();
+	return SSD1306_OK;
 }
 
 ssd1306_error_t ssd1306_update_display(){
@@ -104,15 +105,16 @@ ssd1306_error_t ssd1306_update_display(){
 	return SSD1306_OK;
 }
 
-void ssd1306_clear_buffer(){
+ssd1306_error_t ssd1306_clear_buffer(){
 	for(int i = 0; i < DISPLAY_BUFFFER_LEN; i++){
 		DISPLAY_BUFFER[i] = 0x00;
 	}
+	return SSD1306_OK;
 }
 
-void ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len){
+ssd1306_error_t ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len){
 	if(page > 7 || column > 127){
-		return;
+		return SSD1306_BUFFER_ERROR;
 	}
 	uint16_t j = 0;
 	uint16_t column_offset = 0, page_offset = 0;
@@ -125,32 +127,39 @@ void ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_
 		buf++;
 		j+= FONT_SPACING;
 	}
+	return SSD1306_OK;
 }
 
-void ssd1306_set_negative_display(){
+ssd1306_error_t ssd1306_set_negative_display(){
 	ssd1306_send_one_cmd(SSD1306_SET_NEGATIVE_DISPLAY);
+	return SSD1306_OK;
 }
 
-void ssd1306_set_positive_display(){
+ssd1306_error_t ssd1306_set_positive_display(){
 	ssd1306_send_one_cmd(SSD1306_SET_POSITIVE_DISPLAY);
+	return SSD1306_OK;
 }
 
-void ssd1306_mirror_display_forward(){
+ssd1306_error_t ssd1306_mirror_display_forward(){
 	ssd1306_send_one_cmd(SSD1306_SET_SEGMENT_REMAP_SEG0_COL127);
+	return SSD1306_OK;
 }
 
-void ssd1306_mirror_display_reverse(){
+ssd1306_error_t ssd1306_mirror_display_reverse(){
 	ssd1306_send_one_cmd(SSD1306_SET_SEGMENT_REMAP_SEG0_COL0);
+	return SSD1306_OK;
 }
 //meaning of up down will depend on user
-void ssd1306_flip_display_upward(){
+ssd1306_error_t ssd1306_flip_display_upward(){
 	ssd1306_send_one_cmd(SSD1306_INV_COM_SCAN);
 	ssd1306_mirror_display_forward();
+	return SSD1306_OK;
 }
 
-void ssd1306_flip_display_downward(){
+ssd1306_error_t ssd1306_flip_display_downward(){
 	ssd1306_send_one_cmd(SSD1306_NORMAL_COM_SCAN);
 	ssd1306_mirror_display_reverse();
+	return SSD1306_OK;
 }
 
 void test_ssd(){

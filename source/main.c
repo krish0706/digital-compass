@@ -32,18 +32,14 @@
 #include "fsl_debug_console.h"
 #include "fsl_clock.h"
 #include "board.h"
-
 #include "pin_mux.h"
-#include "i2c.h"
-#include "systick.h"
+
 #include "QMC5883L.h"
 #include "ssd1306.h"
-#include "stdint.h"
-#include "ui.h"
 #include "state_machine.h"
-#include "math.h"
+#include "i2c.h"
+#include "systick.h"
 
-#define PI 3.14159
 
 /*******************************************************************************
  * Definitions

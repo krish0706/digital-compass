@@ -52,19 +52,20 @@
 
 typedef enum{
 	SSD1306_NACK_ERROR,
+	SSD1306_BUFFER_ERROR,
 	SSD1306_OK,
 }ssd1306_error_t;
 
-void init_ssd1306();
-void ssd1306_clear_buffer();
+ssd1306_error_t init_ssd1306();
+ssd1306_error_t ssd1306_clear_buffer();
 ssd1306_error_t ssd1306_send_one_cmd(uint8_t cmd);
-void ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len);
-void test_ssd();
+ssd1306_error_t ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len);
 ssd1306_error_t ssd1306_update_display();
-void ssd1306_set_negative_display();
-void ssd1306_set_positive_display();
-void ssd1306_flip_display_upward();
-void ssd1306_flip_display_downward();
-void ssd1306_mirror_display_forward();
-void ssd1306_mirror_display_reverse();
+ssd1306_error_t ssd1306_set_negative_display();
+ssd1306_error_t ssd1306_set_positive_display();
+ssd1306_error_t ssd1306_flip_display_upward();
+ssd1306_error_t ssd1306_flip_display_downward();
+ssd1306_error_t ssd1306_mirror_display_forward();
+ssd1306_error_t ssd1306_mirror_display_reverse();
+void test_ssd();
 #endif
