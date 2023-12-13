@@ -40,6 +40,7 @@
 #include "ssd1306.h"
 #include "math.h"
 #include "stdint.h"
+#include "ui.h"
 #define PI 3.14159
 /*******************************************************************************
  * Definitions
@@ -77,6 +78,10 @@ int main(void)
     ssd1306_mirror_display_reverse();
     ssd1306_mirror_display_forward();
 
+    display_raw_reading_screen(0, 100, 1000);
+    display_raw_reading_screen(-0, -100, -1000);
+    display_direction_screen(0);
+    display_direction_screen(90);
 
     while(1);
 
