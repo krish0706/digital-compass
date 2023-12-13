@@ -127,5 +127,4 @@ void qmc_dump_calibration_data(uint16_t num_samples_to_dump);
 void qmc_run_calibration(uint16_t num_samples, float bias[]);
 void qmc_calibrate_data(int16_t data[]);
 
-
 #endif
