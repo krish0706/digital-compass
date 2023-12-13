@@ -128,6 +128,7 @@ ssd1306_error_t ssd1306_update_screen(){
 		}
 	}
 	I2C_STOP();
+	b_delay(10);
 	return SSD1306_OK;
 }
 
@@ -138,6 +139,9 @@ void ssd1306_clear_buffer(){
 }
 
 void ssd1306_write_string_in_buffer(uint8_t page,uint8_t column,char *buf,uint8_t buf_len){
+	if(page > 7 || column > 127){
+		return;
+	}
 	uint16_t j = 0;
 	uint16_t column_offset = 0, page_offset = 0;
 	column_offset = column;

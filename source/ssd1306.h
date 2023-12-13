@@ -68,5 +68,4 @@ void ssd1306_flip_display_upward();
 void ssd1306_flip_display_downward();
 void ssd1306_mirror_display_forward();
 void ssd1306_mirror_display_reverse();
-
 #endif
