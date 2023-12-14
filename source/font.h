@@ -1,12 +1,30 @@
+/*******************************************************************************
+ * Copyright (C) 2023 by Krish Shah
+ *
+ * Redistribution, modification or use of this software in source or binary
+ * forms is permitted as long as the files maintain this copyright. Users are
+ * permitted to modify this and use it to learn about the field of embedded
+ * software. Krish Shah and the University of Colorado are not liable for
+ * any misuse of this material.
+ * ****************************************************************************/
+
+/**
+ * @file    font.h
+ * @brief   5x7 Font Library, ranging from " "(space) to "}".
+ * 			Based on https://github.com/adafruit/monochron/blob/master/firmware/font5x7.h
+ *
+ * @author  Krish Shah
+ * @date    December 13 2023
+ *
+ */
 #ifndef __FONT_H__
 #define __FONT_H__
 #include "stdint.h"
-//https://github.com/adafruit/monochron/blob/master/firmware/font5x7.h
-#define FONT_LOOKUP_OFFSET 0x20
-#define FONT_SIZE 5
-#define FONT_SPACING 6//start of next character from start of previous character, => fontsize+1
+#define FONT_LOOKUP_OFFSET 0x20//offset from array index of font array to value of character in ascii table
+#define FONT_SIZE 5			   //width of font
+#define FONT_SPACING 6		   //start of next character from start of previous character, => fontsize+1
 #define FONT_TABLE_LEN 99
-const uint8_t FONT[99][5] = {
+const uint8_t FONT[FONT_TABLE_LEN][FONT_SIZE] = {
 							   {0x00, 0x00, 0x00, 0x00, 0x00},  // space
 							   {0x00, 0x00, 0x4F, 0x00, 0x00},  // !
 							   {0x00, 0x07, 0x00, 0x07, 0x00},  // "
@@ -102,6 +120,4 @@ const uint8_t FONT[99][5] = {
 							   {0x00, 0x00, 0x7F, 0x00, 0x00},	// |
 							   {0x00, 0x41, 0x36, 0x08, 0x00},	// }
 };
-
-
 #endif

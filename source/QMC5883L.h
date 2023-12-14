@@ -1,7 +1,25 @@
+/*******************************************************************************
+ * Copyright (C) 2023 by Krish Shah
+ *
+ * Redistribution, modification or use of this software in source or binary
+ * forms is permitted as long as the files maintain this copyright. Users are
+ * permitted to modify this and use it to learn about the field of embedded
+ * software. Krish Shah and the University of Colorado are not liable for
+ * any misuse of this material.
+ * ****************************************************************************/
+
+/**
+ * @file    qmc5883l.h
+ * @brief   Header file for Driver Code for QMC5883L Magnetometer IC.
+ *
+ * @author  Krish Shah
+ * @date    December 13 2023
+ *
+ */
 #ifndef __QMC5883L_H__
 #define __QMC5883L_H__
 
-#define QMC_DEVICE_ADDR (0x0DU)
+#define QMC_DEVICE_ADDR 	(0x0DU)
 
 #define QMC_DATA_X_LSB_ADDR (0x00U)
 #define QMC_DATA_X_MSB_ADDR	(0x01U)
@@ -103,7 +121,7 @@ typedef struct{
 	qmc_cr2_int_enb_options_t int_enb;
 }qmc_config_t;
 
-
+//calculation for scale and offset is present in /calibration-py-file
 #define OFFSET_X 54
 #define OFFSET_Y -193
 #define OFFSET_Z -31
@@ -121,10 +139,77 @@ typedef struct{
 	float scale_z;
 }qmc_calibration_data_t;
 
+/*
+ * Function to inialise the QMC module accoring to the config provided
+ *
+ * Parameters:
+ *  config pointer to config structure containing the config for the device
+ *
+ * Returns:
+ *  none
+ */
 void init_qmc(qmc_config_t *config);
+
+/*
+ * Function to get next raw sample from QMC5883L IC
+ *
+ * Parameters:
+ *  result(out) pointer to 16-bit integer array to collect the raw sample values
+ *
+ * Returns:
+ *  1 on success
+ *  0 on failure
+ */
 qmc_error_t qmc_get_nex_raw_sample(int16_t result[]);
+
+/*
+ * Function to dump raw sensor values on the terminal to run a python based calibration routine
+ * based on:
+ * 	https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
+ *
+ * The python calibration routine calculates the scale factor for each axis in addition to the
+ * bias. It can be found under /calibration-py-file
+ *
+ * It dumps the axis data in the following format
+ *
+ * 	 <x> <y> <z>\n
+ *
+ * Parameters:
+ *  num_samples the number of samples for which the data should be dumped
+ *
+ * Returns:
+ *  none
+ */
 void qmc_dump_calibration_data(uint16_t num_samples_to_dump);
-void qmc_run_calibration(uint16_t num_samples, float bias[]);
+
+/*
+ * Function to run a calibration routine based on:
+ * 	https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
+ *
+ * It collects max and min values in each axis for the number of samples specified. After that it
+ * uses the following formula to find the offset(bias) in each axis:
+ *
+ * 		offset = (max - min)/2
+ *
+ * Parameters:
+ *  num_samples the number of samples for which the calibration should run
+ *
+ * Returns:
+ *  none
+ */
+void qmc_run_calibration(uint16_t num_samples);
+
+/*
+ * Function to calibrate data according to the calculated value of scale and bias
+ *
+ * calibrated value for an axis = (scale*(axis_value - offset))
+ *
+ * Parameters:
+ *  data(in/out) pointer to data array which is processed and calibrated
+ *
+ * Returns:
+ *  none
+ */
 void qmc_calibrate_data(int16_t data[]);
 
 #endif

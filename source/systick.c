@@ -75,16 +75,34 @@ void reset_tick()
 	tick = 0;
 }
 
+/*
+ * A function reset the clock tick counter
+ *
+ * Parameters:
+ *  none
+ *
+ * Returns:
+ *  none
+ */
 void reset_clock_tick(){
 	clock_tick = tick;
 }
 
+/*
+ * A function get the ticks elapsed since last call to reset_clock_tick()
+ *
+ * Parameters:
+ *  none
+ *
+ * Returns:
+ *  ticks elapsed since last call to reset_clock_tick()
+ */
 ticktime_t get_clock_tick(){
 	return (tick-clock_tick);
 }
 
 /*
- * A function for blocking delay call in seconds
+ * A function for blocking delay call in mseconds
  *
  * Parameters:
  *  seconds interger value of number of ms to delay

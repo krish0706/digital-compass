@@ -26,7 +26,7 @@ typedef volatile uint32_t ticktime_t;
 
 /*
  * Initializes the Systick timer. It is configured to generate an interrupt every 1ms which is used to
- * increment the tick variable.
+ * increment the tick variable. If CLKSOURCE bit is 0, core-clock/16 is the systick clock
  *
  * Parameters:
  *  none
@@ -62,7 +62,7 @@ void reset_tick();
  * A function for blocking delay call in mseconds
  *
  * Parameters:
- *  seconds interger value of number of seconds to delay
+ *  seconds interger value of number of mseconds to delay
  *
  * Returns:
  *  none
