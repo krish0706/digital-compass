@@ -65,7 +65,7 @@ The device starts up in a display test state where a test sequence is run on the
 
 
 ## Display Driver
-It is based on a frame buffer, where changes for the new frame are made onto a virtual frame present in memory, and after that the entire display is update with this new virtual frame. The implementation is simpler than manually keeping track of where elements have been rendered on the screen and where do they need to be erased from.
+It is based on a frame buffer, where changes for the new frame are made onto a virtual frame present in memory, and after that the entire display is updated with this new virtual frame. The implementation is simpler than manually keeping track of where elements have been rendered on the screen and where do they need to be erased from.
 
 Images of the Display in Action:
 
@@ -79,7 +79,7 @@ Direction Data Screen
 ![dir-data-disp](imgs/direction-display-screen.jpg)
 
 ## Magnetic Calibration Process
-Based on reference [2], i have created a python script that can provide the scale and offset required to calibrate the reading from each axis. The calibrated value for the reading is provided with the following formula.
+Based on reference [2], I have created a python script (available in the calibration-py-file/ folder) that can provide the scale and offset required to calibrate the reading from each axis. The calibrated value for the reading is provided with the following formula.
 
 Calibrated Axis Data = scale*(raw_reading - bias)
 
@@ -97,7 +97,7 @@ Output of Magnetic Calibration Process. The Data should be a circle centered on 
 ## Testing Procedure
 
 ### Display
-A self-test sequence is provided on the start of the state machine where the display runs through all of its configuration. This test state can be observed for Display Ram Mapping Issue( if characters are not printed properly) or for dead pixels etc
+A self-test sequence is provided on the start of the state machine where the display runs through all of its configurations. This test state can be observed for Display RAM Mapping Issue( if characters are not printed properly) or for dead pixels.
 
 ### Magentometer
 Two facilites for calibration are provided, on board and an accompanying python file. The python file based calibration is more accurate since it provides a scale factor as well. Incase of inaccurate reading, recalibration must be done. 
