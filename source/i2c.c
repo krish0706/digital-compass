@@ -37,7 +37,8 @@
  * Returns:
  *  none
  */
-void I2C_START(){
+void I2C_START()
+{
 	I2C1->C1 |= I2C_C1_MST_MASK;
 }
 
@@ -50,7 +51,8 @@ void I2C_START(){
  * Returns:
  *  none
  */
-void I2C_STOP(){
+void I2C_STOP()
+{
 	I2C1->C1 &= ~I2C_C1_MST_MASK;
 }
 
@@ -63,7 +65,8 @@ void I2C_STOP(){
  * Returns:
  *  none
  */
-void I2C_RSTART(){
+void I2C_RSTART()
+{
 	I2C1->C1 |= I2C_C1_RSTA_MASK;
 }
 
@@ -76,7 +79,8 @@ void I2C_RSTART(){
  * Returns:
  *  none
  */
-void I2C_WAIT_IICIF(){
+void I2C_WAIT_IICIF()
+{
 	while((I2C1->S & I2C_S_IICIF_MASK) == 0);
 	I2C1->S |= I2C_S_IICIF_MASK;
 }
@@ -90,7 +94,8 @@ void I2C_WAIT_IICIF(){
  * Returns:
  *  1 for ack, 0 for nack
  */
-i2c_ack_t I2C_RXAK(){
+i2c_ack_t I2C_RXAK()
+{
 	if(I2C1->S & I2C_S_RXAK_MASK){
 		//no ack was received
 		return I2C_NACK;
@@ -108,7 +113,8 @@ i2c_ack_t I2C_RXAK(){
  * Returns:
  *  none
  */
-void I2C_TX_ACK(){
+void I2C_TX_ACK()
+{
 	I2C1->C1 &= ~I2C_C1_TXAK_MASK;
 }
 
@@ -121,7 +127,8 @@ void I2C_TX_ACK(){
  * Returns:
  *  none
  */
-void I2C_TX_NACK(){
+void I2C_TX_NACK()
+{
 	I2C1->C1 |= I2C_C1_TXAK_MASK;
 }
 
@@ -134,7 +141,8 @@ void I2C_TX_NACK(){
  * Returns:
  *  none
  */
-void I2C_TRANSMIT_MODE(){
+void I2C_TRANSMIT_MODE()
+{
 	I2C1->C1 |= I2C_C1_TX_MASK;
 }
 
@@ -147,7 +155,8 @@ void I2C_TRANSMIT_MODE(){
  * Returns:
  *  none
  */
-void I2C_RECEIVE_MODE(){
+void I2C_RECEIVE_MODE()
+{
 	I2C1->C1 &= ~I2C_C1_TX_MASK;
 }
 
@@ -160,7 +169,8 @@ void I2C_RECEIVE_MODE(){
  * Returns:
  *  none
  */
-void I2C_SEND_BYTE(uint8_t byte){
+void I2C_SEND_BYTE(uint8_t byte)
+{
 	I2C1->D = byte;
 }
 
@@ -174,7 +184,8 @@ void I2C_SEND_BYTE(uint8_t byte){
  * Returns:
  *  8 bit i2c address
  */
-uint8_t I2C_GET_ADDRESS(uint8_t addr, i2c_operation_t operation){
+uint8_t I2C_GET_ADDRESS(uint8_t addr, i2c_operation_t operation)
+{
 	return (addr<<1 | operation);
 }
 
@@ -192,7 +203,8 @@ uint8_t I2C_GET_ADDRESS(uint8_t addr, i2c_operation_t operation){
  * Returns:
  *  none
  */
-void init_i2c(){
+void init_i2c()
+{
 	SIM->SCGC4 |= SIM_SCGC4_I2C1_MASK;
 	SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
 

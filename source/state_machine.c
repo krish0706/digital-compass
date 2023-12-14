@@ -78,9 +78,11 @@ state_table_entry_t state_table[] = {
  * Returns:
  *  none
  */
-void test_display_callback(state_info_t *state_machine){
+void test_display_callback(state_info_t *state_machine)
+{
 	test_ssd();
-	if(now() - state_machine->state_start_time > TEST_DISPLAY_DURATION){
+	if(now() - state_machine->state_start_time > TEST_DISPLAY_DURATION)
+	{
 		state_machine->timer_elapsed_event_flag = 1;
 	}
 }
@@ -94,11 +96,13 @@ void test_display_callback(state_info_t *state_machine){
  * Returns:
  *  none
  */
-void raw_display_callback(state_info_t *state_machine){
+void raw_display_callback(state_info_t *state_machine)
+{
 	int16_t result[3];
 	qmc_get_nex_raw_sample(result);
 	display_raw_reading_display(result[AXIS_X], result[AXIS_Y], result[AXIS_Z]);
-	if(now() - state_machine->state_start_time > RAW_DISPLAY_DURATION){
+	if(now() - state_machine->state_start_time > RAW_DISPLAY_DURATION)
+	{
 		state_machine->timer_elapsed_event_flag = 1;
 	}
 }
@@ -112,7 +116,8 @@ void raw_display_callback(state_info_t *state_machine){
  * Returns:
  *  none
  */
-void direction_display_callback(state_info_t *state_machine){
+void direction_display_callback(state_info_t *state_machine)
+{
 	int16_t result[3];
 	double direction = 0;
 	qmc_get_nex_raw_sample(result);
@@ -120,7 +125,8 @@ void direction_display_callback(state_info_t *state_machine){
 	direction = atan2(result[AXIS_Y],result[AXIS_X]);//atan2 is discontinuous at 180 degrees thus 360*
 													 //should be added to it if value is less than 0
 													 //during the radian to degree conversion
-	if(direction < 0){
+	if(direction < 0)
+	{
 		direction = ((direction)*PI_RADIAN_IN_DEGREES/PI) + TWO_PI_RADIAN_IN_DEGREES;
 	}else{
 		direction = (direction)*PI_RADIAN_IN_DEGREES/PI;
@@ -145,14 +151,17 @@ void direction_display_callback(state_info_t *state_machine){
  * Returns:
  *  none
  */
-void run_state_machine(){
+void run_state_machine()
+{
 	state_info_t state_machine;
 	state_machine.current_state = TEST_DISPLAY;
 	state_machine.timer_elapsed_event_flag = 0;
 	state_machine.state_start_time = now();
 
-	while(1){
-		if(state_machine.timer_elapsed_event_flag){
+	while(1)
+	{
+		if(state_machine.timer_elapsed_event_flag)
+		{
 			state_machine.timer_elapsed_event_flag = 0;
 			state_machine.current_state = state_table[state_machine.current_state].TIMER_ELAPSED_next_state;
 			state_machine.state_start_time = now();

@@ -35,7 +35,8 @@
  * Returns:
  *  value of calculated frame rate
  */
-uint32_t get_frame_rate(){
+uint32_t get_frame_rate()
+{
 	static ticktime_t previous_frame_tick = 0;
 	uint32_t time_diff = now() - previous_frame_tick;
 	uint32_t frame_rate = (1000/time_diff);
@@ -54,7 +55,8 @@ uint32_t get_frame_rate(){
  * Returns:
  *  none
  */
-void display_raw_reading_display(int16_t x, int16_t y,int16_t z){
+void display_raw_reading_display(int16_t x, int16_t y,int16_t z)
+{
 	char buf[100];
 
 	ssd1306_clear_buffer();
@@ -87,7 +89,8 @@ void display_raw_reading_display(int16_t x, int16_t y,int16_t z){
  * Returns:
  *  none
  */
-void display_direction_display(int16_t direction){
+void display_direction_display(int16_t direction)
+{
 	char buf[100];
 
 	ssd1306_clear_buffer();

@@ -84,7 +84,8 @@ void reset_tick()
  * Returns:
  *  none
  */
-void reset_clock_tick(){
+void reset_clock_tick()
+{
 	clock_tick = tick;
 }
 
@@ -97,7 +98,8 @@ void reset_clock_tick(){
  * Returns:
  *  ticks elapsed since last call to reset_clock_tick()
  */
-ticktime_t get_clock_tick(){
+ticktime_t get_clock_tick()
+{
 	return (tick-clock_tick);
 }
 
@@ -110,7 +112,8 @@ ticktime_t get_clock_tick(){
  * Returns:
  *  none
  */
-void b_delay(int ms){
+void b_delay(int ms)
+{
 	reset_clock_tick();
 	while(get_clock_tick()<(ms));
 }
