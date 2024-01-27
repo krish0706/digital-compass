@@ -1,6 +1,6 @@
-# PES Final Project: Digital Compass using QMC5883L Magnetometer + SSD1306 Based 128*64 Display
+# ECEN5813 Priciples of Embedded Software Final Project: Digital Compass using QMC5883L Magnetometer + SSD1306 Based 128*64 Display
 
-- [PES Final Project: Digital Compass using QMC5883L Magnetometer + SSD1306 Based 128\*64 Display](#pes-final-project-digital-compass-using-qmc5883l-magnetometer--ssd1306-based-12864-display)
+- [ECEN5813 Priciples of Embedded Software Final Project: Digital Compass using QMC5883L Magnetometer + SSD1306 Based 128\*64 Display](#ecen5813-priciples-of-embedded-software-final-project-digital-compass-using-qmc5883l-magnetometer--ssd1306-based-12864-display)
   - [Project Introduction](#project-introduction)
     - [Functionality:](#functionality)
       - [Display Driver](#display-driver)
@@ -105,3 +105,4 @@ Two facilites for calibration are provided, on board and an accompanying python 
 ## References
 1. Font: https://github.com/adafruit/monochron/blob/master/firmware/font5x7.h
 2. Magnetometer Calibration Process: https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
+3. "Applications of Magnetoresistive Sensors in Navigation Systems" - Michael J. Caruso, Honeywell. 
